@@ -13,3 +13,24 @@ import openai
 
 
 
+from dotenv import load_dotenv
+load_dotenv
+
+os.environ['GROQ_API']=os.getenv('GROQ_API')
+
+groq_api_key=os.getenv("GROQ_API")
+
+llm=ChatGroq(groq_api_key=groq_api_key,model_name='Gemma-7b-It')
+
+prompt=ChatPromptTemplate.from_template(
+      """
+    Answer the questions based on the provided context only.
+    Please provide the most accurate respone based on the question
+    <context>
+    {context}
+    <context>
+    Question:{input}
+
+    """
+)
+
