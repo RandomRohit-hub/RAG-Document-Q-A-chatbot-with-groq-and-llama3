@@ -20,7 +20,7 @@ os.environ['GROQ_API']=os.getenv('GROQ_API')
 
 groq_api_key=os.getenv("GROQ_API")
 
-llm=ChatGroq(groq_api_key=groq_api_key,model_name='Gemma-7b-It')
+llm=ChatGroq(groq_api_key=groq_api_key,model_name='Llama3-8b-8192')
 
 prompt=ChatPromptTemplate.from_template(
       """
@@ -33,4 +33,24 @@ prompt=ChatPromptTemplate.from_template(
 
     """
 )
+
+
+def create_vector_embedding():
+    if "vectors" not in st.session_state:
+        st.session_state.embeddings=OllamaEmbeddings(model_name="all-MiniLM-L6-v2")
+        st.session_state.loader=PyPDFDirectoryLoader("research_papers") ## Data Ingestion step
+        st.session_state.docs=st.session_state.loader.load() ## Document Loading
+        st.session_state.text_splitter=RecursiveCharacterTextSplitter(chunk_size=1000,chunk_overlap=200)
+        st.session_state.final_documents=st.session_state.text_splitter.split_documents(st.session_state.docs[:50])
+        st.session_state.vectors=FAISS.from_documents(st.session_state.final_documents,st.session_state.embeddings)
+st.title("RAG Document Q&A With Groq And Lama3")
+
+
+
+
+
+
+
+
+
 
